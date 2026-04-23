@@ -5,8 +5,8 @@ module EventsHelper
               .stream("Event$#{event.id}")
               .to_a   
 
-    upvotes = events.select { |e| e.event_type == "EventUpvoted" }.count
-    downvotes = events.select { |e| e.event_type == "EventDownvoted" }.count
+    upvotes = events.count { |e| e.event_type == "EventUpvoted" }
+    downvotes = events.count { |e| e.event_type == "EventDownvoted" }
 
     upvotes - downvotes
   end

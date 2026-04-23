@@ -8,12 +8,27 @@
       <strong><%= clerk.user.email_addresses.first.email_address %></strong>
     </p>
 
-    <a href="<%= clerk.sign_out_url %>">Logout</a>
+    <!-- ✅ FIXED LOGOUT -->
+    <button onclick="handleLogout()">Logout</button>
+
   <% else %>
+    <!-- ✅ Clerk Hosted Login -->
     <a href="https://causal-yeti-65.accounts.dev/sign-in">Login</a> |
     <a href="https://causal-yeti-65.accounts.dev/sign-up">Sign Up</a>
   <% end %>
 </div>
+
+<!-- ✅ Logout Script -->
+<script>
+  async function handleLogout() {
+    await Clerk.load();
+
+    await Clerk.signOut();
+
+    // 🔥 IMPORTANT: force full reload
+    window.location.reload();
+  }
+</script>
 
 <hr>
 
@@ -21,21 +36,17 @@
 <% @events.each do |event| %>
   <div style="border:1px solid #ccc; padding:15px; margin-bottom:15px; border-radius:8px;">
 
-    <!-- 🏷 Title -->
     <h3><%= event.title %></h3>
 
-    <!-- 📅 Date -->
     <p>
       <strong>Date:</strong>
       <%= event.start_date.strftime("%d %b %Y %I:%M %p") %>
     </p>
 
-    <!-- 🖼 Image -->
     <% if event.image_url.present? %>
-      <img src="<%= event.image_url %>" width="300" style="border-radius:6px;">
+      <img src="<%= event.image_url %>" width="300">
     <% end %>
 
-    <!-- 📝 Description -->
     <p>
       <%= truncate(event.description, length: 150) %>
     </p>
@@ -48,15 +59,18 @@
 
     <!-- 👍 Voting -->
     <% if clerk.session %>
-      <form action="/events/<%= event.id %>/upvote" method="post" style="display:inline;">
+
+      <!-- ✅ FIXED FORM (helper + turbo off) -->
+      <form action="<%= upvote_event_path(event) %>" method="post" data-turbo="false" style="display:inline;">
         <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
         <button type="submit">👍 Upvote</button>
       </form>
 
-      <form action="/events/<%= event.id %>/downvote" method="post" style="display:inline;">
+      <form action="<%= downvote_event_path(event) %>" method="post" data-turbo="false" style="display:inline;">
         <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
         <button type="submit">👎 Downvote</button>
       </form>
+
     <% else %>
       <p style="color: gray;">Login to vote</p>
     <% end %>

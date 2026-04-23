@@ -9,6 +9,15 @@
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+    <!-- ✅ Clerk Script (VERY IMPORTANT) -->
+    <script
+      defer
+      crossorigin="anonymous"
+      data-clerk-publishable-key="pk_test_Y2F1c2FsLXlldGktNjUuY2xlcmsuYWNjb3VudHMuZGV2JA"
+      src="https://causal-yeti-65.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js">
+    </script>
+
   </head>
 
   <body>

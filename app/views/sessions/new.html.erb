@@ -1,0 +1,11 @@
+<h2>Login / Sign Up</h2>
+
+<div id="clerk-root"></div>
+
+<script>
+  window.addEventListener("load", async () => {
+    await Clerk.load();
+
+    Clerk.mountSignIn(document.getElementById("clerk-root"));
+  });
+</script>

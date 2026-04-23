@@ -1,17 +1,24 @@
 class EventsController < ApplicationController
-  before_action :require_clerk_session!, only: [:upvote, :downvote]
 
   def index
-    @events = Event.all
+    @events = Event.all.order(:start_date)
   end
 
   def upvote
-    VoteService.upvote(params[:id], clerk.user.id)
-    redirect_to root_path, notice: "Upvoted!"
+     Rails.logger.info "UPVOTE HIT: #{params[:id]}"
+    VoteService.upvote(params[:id], current_user_id)
+    redirect_to root_path
   end
 
   def downvote
-    VoteService.downvote(params[:id], clerk.user.id)
-    redirect_to root_path, notice: "Downvoted!"
+     Rails.logger.info "DOWNVOTE HIT: #{params[:id]}"
+    VoteService.downvote(params[:id], current_user_id)
+    redirect_to root_path
+  end
+
+  private
+
+  def current_user_id
+    clerk.user&.id
   end
 end
