@@ -7,11 +7,11 @@ class EventsController < ApplicationController
 
   def upvote
     VoteService.upvote(params[:id], clerk.user.id)
-    redirect_to root_path
+    redirect_to root_path, notice: "Upvoted!"
   end
 
   def downvote
     VoteService.downvote(params[:id], clerk.user.id)
-    redirect_to root_path
+    redirect_to root_path, notice: "Downvoted!"
   end
 end
