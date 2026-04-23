@@ -70,3 +70,5 @@ end
 gem 'httparty'
 gem 'rails_event_store'
 gem 'rspec-rails'
+
+gem "clerk-sdk-ruby", require: "clerk"

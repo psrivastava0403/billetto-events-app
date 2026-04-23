@@ -1,0 +1,55 @@
+<h1>Events</h1>
+
+<!-- 🔐 Auth Section -->
+<div style="margin-bottom: 20px;">
+  <% if clerk.session %>
+    <p>
+      Logged in as:
+      <strong><%= clerk.user.email_addresses.first.email_address %></strong>
+    </p>
+
+    <a href="<%= clerk.sign_out_url %>">Logout</a>
+  <% else %>
+    <a href="<%= clerk.sign_in_url %>">Login</a> |
+    <a href="<%= clerk.sign_up_url %>">Sign Up</a>
+  <% end %>
+</div>
+
+<hr>
+
+<!-- 📅 Events List -->
+<% @events.each do |event| %>
+  <div style="border:1px solid #ccc; padding:15px; margin-bottom:15px; border-radius:8px;">
+
+    <h3><%= event.title %></h3>
+
+    <p>
+      <strong>Date:</strong>
+      <%= event.start_date.strftime("%d %b %Y %I:%M %p") %>
+    </p>
+
+    <% if event.image_url.present? %>
+      <img src="<%= event.image_url %>" width="300" style="border-radius:6px;">
+    <% end %>
+
+    <p>
+      <%= truncate(event.description, length: 150) %>
+    </p>
+
+    <!-- 👍 Voting -->
+    <% if clerk.session %>
+      <form action="/events/<%= event.id %>/upvote" method="post" style="display:inline;">
+        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+        <button type="submit">👍 Upvote</button>
+      </form>
+
+      <form action="/events/<%= event.id %>/downvote" method="post" style="display:inline;">
+        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+        <button type="submit">👎 Downvote</button>
+      </form>
+    <% else %>
+      <p style="color: gray;">Login to vote</p>
+    <% end %>
+
+  </div>
+<% end %>
